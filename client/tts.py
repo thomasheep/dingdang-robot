@@ -16,6 +16,7 @@ import pipes
 import logging
 import urllib
 import requests
+import time
 from abc import ABCMeta, abstractmethod
 from uuid import getnode as get_mac
 
@@ -83,12 +84,15 @@ class AbstractMp3TTSEngine(AbstractTTSEngine):
         cmd = ['play', str(filename)]
         self._logger.debug('Executing %s', ' '.join([pipes.quote(arg)
                                                      for arg in cmd]))
+        t1 = time.time()
         with tempfile.TemporaryFile() as f:
             subprocess.call(cmd, stdout=f, stderr=f)
             f.seek(0)
             output = f.read()
             if output:
                 self._logger.debug("Output was: '%s'", output)
+        t2 = time.time()
+        self._logger.debug("tts play mp3:%f", t2-t1)
 
 
 class SimpleMp3Player(AbstractMp3TTSEngine):
@@ -494,6 +498,7 @@ class BaiduTTS(AbstractMp3TTSEngine):
                  'cuid': str(get_mac())[:32],
                  'per': self.per
                  }
+        t1 = time.time()
         r = requests.post('http://tsn.baidu.com/text2audio',
                           data=query,
                           headers={'content-type': 'application/json'})
@@ -506,10 +511,13 @@ class BaiduTTS(AbstractMp3TTSEngine):
                 return None
         except Exception:
             pass
+        t2 = time.time()
         with tempfile.NamedTemporaryFile(suffix='.mp3', delete=False) as f:
             f.write(r.content)
             tmpfile = f.name
-            return tmpfile
+        t3 = time.time()
+        self._logger.info('baidu tts time:%fs, write file time:%fs', t2-t1, t3-t2)
+        return tmpfile
 
     def say(self, phrase):
         self._logger.debug(u"Saying '%s' with '%s'", phrase, self.SLUG)
