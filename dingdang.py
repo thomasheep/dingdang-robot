@@ -5,6 +5,7 @@ import os
 import sys
 import logging
 import time
+import random
 import yaml
 import argparse
 import threading
@@ -107,15 +108,15 @@ class Dingdang(object):
         self.wxBot.run(self.mic)
 
     def run(self):
-        if 'first_name' in self.config:
-            salutation = (u"%s 我能为您做什么?"
-                          % self.config["first_name"])
-        else:
-            salutation = "主人，我能为您做什么?"
-
-        persona = 'DINGDANG'
+        persona = '小安'
         if 'robot_name' in self.config:
             persona = self.config["robot_name"]
+        master = "主人"
+        if 'first_name' in self.config:
+            master = self.config["first_name"]
+
+        salutation = random.choice([("%s,%s能为您做什么?" % master, persona), ("%s，请尽情吩咐%s" % master, persona)])
+
         conversation = Conversation(persona, self.mic, self.config)
 
         # create wechat robot
@@ -134,9 +135,9 @@ class Dingdang(object):
 if __name__ == "__main__":
 
     print("*******************************************************")
-    print("*             叮当 - 中文语音对话机器人               *")
-    print("*          (c) 2017 潘伟洲 <m@hahack.com>             *")
-    print("*   https://github.com/wzpan/dingdang-robot.git       *")
+    print("*             I'm Angry                               *")
+    print("*                                                     *")
+    print("*                                                     *")
     print("*******************************************************")
 
     logging.basicConfig()
