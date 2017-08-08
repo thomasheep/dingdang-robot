@@ -115,7 +115,7 @@ class Dingdang(object):
         if 'first_name' in self.config:
             master = self.config["first_name"]
 
-        salutation = random.choice([("%s,%s能为您做什么?" % master, persona), ("%s，请尽情吩咐%s" % master, persona)])
+        salutation = random.choice(["%s,%s能为您做什么?" % (master, persona), "%s，请尽情吩咐%s" % (master, persona)])
 
         conversation = Conversation(persona, self.mic, self.config)
 
