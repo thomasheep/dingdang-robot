@@ -78,7 +78,7 @@ class Dingdang(object):
         try:
             stt_engine_slug = self.config['stt_engine']
         except KeyError:
-            stt_engine_slug = 'sphinx'
+            stt_engine_slug = 'snowboy-stt'
             logger.warning("stt_engine not specified in profile, defaulting " +
                            "to '%s'", stt_engine_slug)
         stt_engine_class = stt.get_engine_by_slug(stt_engine_slug)
@@ -112,10 +112,10 @@ class Dingdang(object):
         if 'robot_name' in self.config:
             persona = self.config["robot_name"]
         master = "主人"
-        if 'first_name' in self.config:
-            master = self.config["first_name"]
+        if 'master_name' in self.config:
+            master = self.config["master_name"]
 
-        salutation = random.choice(["%s,%s能为您做什么?" % (master, persona), "%s，请尽情吩咐%s" % (master, persona)])
+        salutation = random.choice(["%s,%s竭诚为您服务?" % (master, persona), "%s，请尽情吩咐%s" % (master, persona)])
 
         conversation = Conversation(persona, self.mic, self.config)
 
@@ -135,7 +135,7 @@ class Dingdang(object):
 if __name__ == "__main__":
 
     print("*******************************************************")
-    print("*             I'm Angry                               *")
+    print("*                   安格瑞，正在启动中                  *")
     print("*                                                     *")
     print("*                                                     *")
     print("*******************************************************")
