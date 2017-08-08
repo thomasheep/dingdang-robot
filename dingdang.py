@@ -8,6 +8,7 @@ import time
 import yaml
 import argparse
 import threading
+from client import config
 from client import tts
 from client import stt
 from client import dingdangpath
@@ -71,31 +72,7 @@ class WechatBot(WXBot):
 class Dingdang(object):
     def __init__(self):
         self._logger = logging.getLogger(__name__)
-
-        # Create config dir if it does not exist yet
-        if not os.path.exists(dingdangpath.CONFIG_PATH):
-            try:
-                os.makedirs(dingdangpath.CONFIG_PATH)
-            except OSError:
-                self._logger.error("Could not create config dir: '%s'",
-                                   dingdangpath.CONFIG_PATH, exc_info=True)
-                raise
-
-        # Check if config dir is writable
-        if not os.access(dingdangpath.CONFIG_PATH, os.W_OK):
-            self._logger.critical("Config dir %s is not writable. Dingdang " +
-                                  "won't work correctly.",
-                                  dingdangpath.CONFIG_PATH)
-
-        config_file = dingdangpath.config('profile.yml')
-        # Read config
-        self._logger.debug("Trying to read config file: '%s'", config_file)
-        try:
-            with open(config_file, "r") as f:
-                self.config = yaml.safe_load(f)
-        except OSError:
-            self._logger.error("Can't open config file: '%s'", config_file)
-            raise
+        self.config = config.config
 
         try:
             stt_engine_slug = self.config['stt_engine']
