@@ -179,7 +179,7 @@ class PocketSphinxSTT(AbstractSTTEngine):
             f.truncate()
 
         transcribed = [result[0]]
-        self._logger.info('Transcribed: %r', transcribed)
+        self._logger.info('Transcribed: %s', transcribed)
         return transcribed
 
     @classmethod
@@ -238,7 +238,7 @@ class BaiduSTT(AbstractSTTEngine):
             token = r.json()['access_token']
             return token
         except requests.exceptions.HTTPError:
-            self._logger.critical('Token request failed with response: %r',
+            self._logger.critical('Token request failed with response: %s',
                                   r.text,
                                   exc_info=True)
             return ''
@@ -274,7 +274,7 @@ class BaiduSTT(AbstractSTTEngine):
             if 'result' in r.json():
                 text = r.json()['result'][0].encode('utf-8')
         except requests.exceptions.HTTPError:
-            self._logger.critical('Request failed with response: %r',
+            self._logger.critical('Request failed with response: %s',
                                   r.text,
                                   exc_info=True)
             return []
@@ -366,7 +366,7 @@ class SnowboySTT(AbstractSTTEngine):
         data = fp.read()
         ans = self.detector.RunDetection(data)
         if ans > 0:
-            self._logger.info('Transcribed: %r', self.hotword)
+            self._logger.info('Transcribed: %s', self.hotword)
             return [self.hotword]
         else:
             return []
