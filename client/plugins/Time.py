@@ -3,7 +3,7 @@ import datetime
 from client.app_utils import getTimezone
 from semantic.dates import DateService
 
-WORDS = [u"TIME", u"SHIJIAN", u"JIDIAN"]
+WORDS = ["时间", "几点"]
 SLUG = "time"
 
 
