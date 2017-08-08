@@ -54,7 +54,7 @@ class Brain(object):
                                exc_info=True)
             else:
                 if hasattr(mod, 'WORDS'):
-                    logger.debug("Found plugin '%s' with words: %r", name,
+                    logger.debug("Found plugin '%s' with words: %s", name,
                                  mod.WORDS)
                     plugins.append(mod)
                     if name in thirdparty_exclude_plugins:
