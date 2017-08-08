@@ -120,4 +120,4 @@ class Brain(object):
                     finally:
                         return
         self._logger.debug("No plugin was able to handle any of these " +
-                           "phrases: %r", texts)
+                           "phrases: %s", texts)

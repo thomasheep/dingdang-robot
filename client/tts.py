@@ -516,7 +516,7 @@ class BaiduTTS(AbstractMp3TTSEngine):
             f.write(r.content)
             tmpfile = f.name
         t3 = time.time()
-        self._logger.info('baidu tts time:%fs, write file time:%fs', t2-t1, t3-t2)
+        self._logger.info('baidu tts cloud time:%fs, write file time:%fs', t2-t1, t3-t2)
         return tmpfile
 
     def say(self, phrase):
