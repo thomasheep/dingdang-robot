@@ -98,7 +98,7 @@ class Brain(object):
             # check whether plugin is not allow to be call by thirdparty
             for plugin in self.exclude_plugins:
                 # for text in texts:
-                if hasattr(plugin, "iaValid"):
+                if hasattr(plugin, "isValid"):
                     if plugin.isValid(text) and self.isEnabled(plugin):
                         self.mic.say(u"抱歉，该功能暂时只能通过语音" +
                                      "命令开启。请试试唤醒我后直接" +
@@ -113,7 +113,7 @@ class Brain(object):
 
         for plugin in self.plugins:
             # for text in texts:
-            if hasattr(plugin, "iaValid"): 
+            if hasattr(plugin, "isValid"): 
                 if plugin.isValid(text) and self.isEnabled(plugin):
                     self._logger.debug("'%s' is a valid phrase for plugin " +
                                        "'%s'", text, plugin.__name__)
