@@ -3,7 +3,7 @@
 import os
 import sys
 
-WORDS = [u"ERWEIMA"]
+WORDS = ["微信", "二维码"]
 SLUG = "sendqr"
 
 

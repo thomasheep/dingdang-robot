@@ -5,7 +5,7 @@ import time
 import datetime
 from dateutil import parser
 
-WORDS = ["EMAIL", "INBOX"]
+WORDS = ["邮件", "收信"]
 SLUG = "email"
 
 

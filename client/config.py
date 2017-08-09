@@ -31,4 +31,4 @@ def get_config():
             logger.error("Can't open config file: '%s'", config_file)
             raise
 
-config = get_config()
+profile = get_config()

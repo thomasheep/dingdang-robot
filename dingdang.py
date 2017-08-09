@@ -73,7 +73,7 @@ class WechatBot(WXBot):
 class Dingdang(object):
     def __init__(self):
         self._logger = logging.getLogger(__name__)
-        self.config = config.config
+        self.config = config.profile
 
         try:
             stt_engine_slug = self.config['stt_engine']
