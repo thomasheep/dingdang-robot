@@ -6,84 +6,68 @@ import diagnose
 from uuid import getnode as get_mac
 from app_utils import sendToUser
 from abc import ABCMeta, abstractmethod
-
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
+import config
+from aip import AipNlp
 
 class AbstractNlp(object):
-
+    """
+    Generic parent class for all NLP engines
+    """
     __metaclass__ = ABCMeta
 
     @abstractmethod
     def get_config(self):
         pass
+
     @classmethod
     def get_instance(cls):
         config = cls.get_config()
         instance = cls(**config)
         return instance
 
-    def __init__(self, **kwargs):
-        self._logger = logging.getLogger(__name__)
-
     @abstractmethod
     def lexer(self, texts):
         pass
 
     @abstractmethod
-    def simnet(self, texts):
+    def simnet(self, text1, text2):
         pass
 
 
 class BaiduNlp(AbstractNlp):
-
+    """
+    百度的NLP API.
+    要使用本模块, 首先到百度注册一个开发者账号,
+    之后创建一个新应用, 然后在应用管理的"查看key"中获得 AppID, API Key 和 Secret Key
+    填入 profile.xml 中.
+    """
     SLUG = "baidu"
-    
-    @abstractmethod
-    def get_config(self):
-        pass
 
     @classmethod
     def get_config(cls):
         # FIXME: Replace this as soon as we have a config module
-        config = {}
+        cfg = {}
         # Try to get baidu_yuyin config from config
-        profile_path = dingdangpath.config('profile.yml')
-        if os.path.exists(profile_path):
-            with open(profile_path, 'r') as f:
-                profile = yaml.safe_load(f)
-                if 'baidu_yuyin' in profile:
-                    if 'api_key' in profile['baidu_yuyin']:
-                        config['api_key'] = \
-                            profile['baidu_yuyin']['api_key']
-                    if 'secret_key' in profile['baidu_yuyin']:
-                        config['secret_key'] = \
-                            profile['baidu_yuyin']['secret_key']
-                    if 'per' in profile['baidu_yuyin']:
-                        config['per'] = \
-                            profile['baidu_yuyin']['per']
-        return config
+        cfg['app_id'] = config.profile['baidu_nlp']['app_id']
+        cfg['api_key'] = config.profile['baidu_nlp']['api_key']
+        cfg['secret_key'] = config.profile['baidu_nlp']['secret_key']
+        return cfg
 
-    @classmethod
-    def is_available(cls):
-        return diagnose.check_network_connection()
-
-
-
-
-    def __init__(self, api_key, secret_key):
+    def __init__(self, app_id, api_key, secret_key):
         """
         Baidu NLP
         """
-        super(self.__class__, self).__init__()
-        self.mic = mic
-        self.profile = profile
-        self.wxbot = wxbot
-        self.tuling_key = self.get_key()
+        self.nlp =  AipNlp(app_id, api_key, secret_key)
+ 
+    def lexer(self, texts):
+        return self.nlp.lexer(texts)
 
-   
+  
+    def simnet(self, text1, text2):
+        return self.nlp.simnet(text1, text2)
+
+
+
 def get_nlp_by_slug(slug):
     """
     Returns:
