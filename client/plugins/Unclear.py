@@ -28,9 +28,9 @@ def handle(text, mic, profile, wxbot=None):
         robot = get_robot_by_slug("tuling")
         robot.get_instance(mic, profile, wxbot).chat(text)
     else:
-        messages = [u"抱歉，您能再说一遍吗？",
-                    u"听不清楚呢，可以再为我说一次吗？",
-                    u"再说一遍好吗？"]
+        messages = ["抱歉，您能再说一遍吗？",
+                    "听不清楚呢，可以再为我说一次吗？",
+                    "再说一遍好吗？"]
         message = random.choice(messages)
         mic.say(message)
 

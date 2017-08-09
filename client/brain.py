@@ -2,6 +2,7 @@
 import logging
 import pkgutil
 import dingdangpath
+import nlp
 
 
 class Brain(object):
@@ -21,6 +22,7 @@ class Brain(object):
 
         self.mic = mic
         self.profile = profile
+        self.nlp = nlp.get_nlp_by_slug("baidu").get_instance()
         (self.plugins, self.exclude_plugins) = self.get_plugins()
         self._logger = logging.getLogger(__name__)
         self.handling = False
@@ -89,18 +91,29 @@ class Brain(object):
         text -- user input, typically speech, to be parsed by a plugin
         send_wechat -- also send the respondsed result to wechat
         """
+        text = texts[0]
+        nlp_res = self.nlp.lexer(text)
+
         if thirdparty_call:
             # check whether plugin is not allow to be call by thirdparty
             for plugin in self.exclude_plugins:
-                for text in texts:
-                    if plugin.isValid(text):
+                # for text in texts:
+                if hasattr(plugin, "iaValid"):
+                    if plugin.isValid(text) and self.isEnabled(plugin):
+                        self.mic.say(u"抱歉，该功能暂时只能通过语音" +
+                                     "命令开启。请试试唤醒我后直接" +
+                                     "对我说\"%s\"" % text)
+                        return
+                else:
+                    if plugin.isNlpValid(nlp_res) and self.isEnabled(plugin):
                         self.mic.say(u"抱歉，该功能暂时只能通过语音" +
                                      "命令开启。请试试唤醒我后直接" +
                                      "对我说\"%s\"" % text)
                         return
 
         for plugin in self.plugins:
-            for text in texts:
+            # for text in texts:
+            if hasattr(plugin, "iaValid"): 
                 if plugin.isValid(text) and self.isEnabled(plugin):
                     self._logger.debug("'%s' is a valid phrase for plugin " +
                                        "'%s'", text, plugin.__name__)
@@ -119,5 +132,25 @@ class Brain(object):
                                            plugin.__name__)
                     finally:
                         return
+            else:
+                if plugin.isNlpValid(nlp_res) and self.isEnabled(plugin):
+                    self._logger.debug("'%s' is a valid phrase for plugin " +
+                                       "'%s'", text, plugin.__name__)
+                    try:
+                        self.handling = True
+                        plugin.handle(nlp_res, self.mic, self.profile, wxbot)
+                        self.handling = False
+                    except Exception:
+                        self._logger.error('Failed to execute plugin',
+                                           exc_info=True)
+                        reply = u"抱歉，我的大脑出故障了，晚点再试试吧"
+                        self.mic.say(reply)
+                    else:
+                        self._logger.debug("Handling of phrase '%s' by " +
+                                           "plugin '%s' completed", text,
+                                           plugin.__name__)
+                    finally:
+                        return
+
         self._logger.debug("No plugin was able to handle any of these " +
                            "phrases: %s", texts)

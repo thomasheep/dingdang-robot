@@ -241,11 +241,14 @@ class Mic:
             frames = []
             # check if PERSONA was said
             transcribed = self.passive_stt_engine.transcribe(f)
-
-        if any(PERSONA in phrase for phrase in transcribed):
+        
+        if PERSONA == transcribed:
             return (THRESHOLD, PERSONA)
 
-        return (False, transcribed)
+        # if any(PERSONA in phrase for phrase in transcribed):
+        #     return (THRESHOLD, PERSONA)
+
+        return (False, "")
 
     def activeListen(self, THRESHOLD=None, LISTEN=True, MUSIC=False):
         """
@@ -255,8 +258,9 @@ class Mic:
         """
 
         options = self.activeListenToAllOptions(THRESHOLD, LISTEN, MUSIC)
-        if options:
-            return options[0]
+        return options
+        # if options:
+        #     return options[0]
 
     def activeListenToAllOptions(self, THRESHOLD=None, LISTEN=True,
                                  MUSIC=False):
