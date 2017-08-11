@@ -47,4 +47,4 @@ def isValid(text):
         Arguments:
         text -- user-input, typically transcribed speech
     """
-    return all(word in text for word in ["微信", "二维码"])
+    return all(word in text for word in [u"微信", u"二维码"])

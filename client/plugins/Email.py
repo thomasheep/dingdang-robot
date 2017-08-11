@@ -62,15 +62,15 @@ def getSubject(msg, profile):
     subject = email.Header.decode_header(msg['subject'])
     sub = my_unicode(subject[0][0], subject[0][1])
     to_read = False
-    if sub.strip() == '':
-        return ''
+    if sub.strip() == u'':
+        return u''
     if 'read_email_title' in profile:
         to_read = profile['read_email_title']
-    if '[echo]' in sub or '[control]' in sub:
+    if u'[echo]' in sub or u'[control]' in sub:
         return sub
     if to_read:
-        return '邮件标题为 %s' % sub
-    return ''
+        return u'邮件标题为 %s' % sub
+    return u''
 
 
 def isNewEmail(msg):
@@ -87,7 +87,7 @@ def isNewEmail(msg):
 def isEchoEmail(msg, profile):
     """ Whether an email is an Echo email"""
     subject = getSubject(msg, profile)
-    if '[echo]' in subject:
+    if u'[echo]' in subject:
         return True
     return False
 
@@ -95,7 +95,7 @@ def isEchoEmail(msg, profile):
 def isControlEmail(msg, profile):
     """ Whether an email is a control email"""
     subject = getSubject(msg, profile)
-    if '[control]' in subject and isSelfEmail(msg, profile):
+    if u'[control]' in subject and isSelfEmail(msg, profile):
         return True
     return False
 
@@ -185,7 +185,7 @@ def handle(text, mic, profile, wxbot=None):
         msgs = fetchUnreadEmails(profile, limit=5)
 
         if isinstance(msgs, int):
-            response = "您有 %d 封未读邮件" % msgs
+            response = u"您有 %d 封未读邮件" % msgs
             mic.say(response)
             return
 
@@ -198,15 +198,15 @@ def handle(text, mic, profile, wxbot=None):
     if not senders:
         mic.say(u"您没有未读邮件，真棒！")
     elif len(senders) == 1:
-        mic.say(u"您有来自 " + senders[0] + " 的未读邮件")
+        mic.say(u"您有来自 " + senders[0] + u" 的未读邮件")
     else:
         response = u"您有 %d 封未读邮件" % len(
             senders)
         unique_senders = list(set(senders))
         if len(unique_senders) > 1:
             unique_senders[-1] = ', ' + unique_senders[-1]
-            response += "。这些邮件的发件人包括："
-            response += ' 和 '.join(senders)
+            response += u"。这些邮件的发件人包括："
+            response += u' , '.join(senders)
         else:
             response += "，邮件都来自 " + unique_senders[0]
         mic.say(response)

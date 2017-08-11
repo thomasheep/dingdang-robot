@@ -27,4 +27,4 @@ def isValid(text):
         Arguments:
         text -- user-input, typically transcribed speech
     """
-    return any(word in text.lower() for word in ["echo", u"传话"])
+    return any(word in text.lower() for word in [u"echo", u"传话"])

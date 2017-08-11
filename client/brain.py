@@ -138,7 +138,7 @@ class Brain(object):
                                        "'%s'", text, plugin.__name__)
                     try:
                         self.handling = True
-                        plugin.handle(nlp_res, self.mic, self.profile, wxbot)
+                        plugin.nlpHandle(nlp_res, self.mic, self.profile, wxbot)
                         self.handling = False
                     except Exception:
                         self._logger.error('Failed to execute plugin',
