@@ -112,6 +112,8 @@ class Dingdang(object):
                 self.wxBot.run(self.mic)
             except Exception:
                 logger.error("wxbot Error occured!", exc_info=True)
+
+            logger.error("wxbot run finished!")
             runTimes += 1
 
     def run(self):
