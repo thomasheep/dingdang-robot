@@ -1,9 +1,11 @@
 # -*- coding: utf-8-*-
 import datetime
+
 from client.app_utils import getTimezone
 from semantic.dates import DateService
+import re
 
-WORDS = ["时间", "几点"]
+WORDS = ["时间"]
 SLUG = "time"
 
 

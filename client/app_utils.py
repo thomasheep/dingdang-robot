@@ -59,9 +59,9 @@ def emailUser(profile, SUBJECT="", BODY="", ATTACH_LIST=[]):
         BODY = u"%s，<br><br>这是您要的内容：<br>%s<br>" % (profile['first_name'], BODY)
 
     recipient = profile['email']['address']
-    robot_name = u'叮当'
-    if profile['robot_name_cn']:
-        robot_name = profile['robot_name_cn']
+    robot_name = u'小安'
+    if profile['robot_name']:
+        robot_name = profile['robot_name']
     recipient = robot_name + " <%s>" % recipient
 
     if not recipient:
