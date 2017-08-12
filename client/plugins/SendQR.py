@@ -28,8 +28,8 @@ def handle(text, mic, profile, wxbot=None):
     sys.path.append(mic.dingdangpath.LIB_PATH)
     from app_utils import emailUser
     dest_file = os.path.join(mic.dingdangpath.TEMP_PATH, 'wxqr.png')
-    wxbot.get_uuid()
-    wxbot.gen_qr_code(dest_file)
+    # wxbot.get_uuid()
+    # wxbot.gen_qr_code(dest_file)
     if os.path.exists(dest_file):
         mic.say(u'正在发送微信登录二维码到您的邮箱')
         if emailUser(profile, u"这是您的微信登录二维码", "", [dest_file]):
