@@ -108,7 +108,10 @@ class Dingdang(object):
         runTimes = 1
         while True:
             self._logger.info("wxbot run %d"%runTimes)
-            self.wxBot.run(self.mic)
+            try:
+                self.wxBot.run(self.mic)
+            except Exception:
+                logger.error("wxbot Error occured!", exc_info=True)
             runTimes += 1
 
     def run(self):
