@@ -105,7 +105,11 @@ class Dingdang(object):
             stt_engine_class.get_active_instance())
 
     def start_wxbot(self):
-        self.wxBot.run(self.mic)
+        runTimes = 1
+        while True:
+            self._logger.info("wxbot run %d"%runTimes)
+            self.wxBot.run(self.mic)
+            runTimes += 1
 
     def run(self):
         persona = '小安'
