@@ -1208,11 +1208,11 @@ class WXBot:
             print '[INFO] Get %d contacts' % len(self.contact_list)
             print '[INFO] Start to process messages .'
         if Mic is not None:
-               Mic.say("微信登录")
+               Mic.say("微信已登录")
         self.proc_msg()
         self.is_login = False
         if Mic is not None:
-               Mic.say("微信退出")
+               Mic.say("微信已退出")
 
     def get_uuid(self):
         url = 'https://login.weixin.qq.com/jslogin'

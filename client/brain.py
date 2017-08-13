@@ -91,7 +91,8 @@ class Brain(object):
         text -- user input, typically speech, to be parsed by a plugin
         send_wechat -- also send the respondsed result to wechat
         """
-        text = texts[0]
+        #to unicode
+        text = texts[0].decode("utf8")
         nlp_res = self.nlp.lexer(text)
 
         if thirdparty_call:

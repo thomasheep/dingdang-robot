@@ -12,6 +12,7 @@ import dingdangpath
 import mute_alsa
 import time
 from app_utils import wechatUser
+import threading
 
 
 class Mic:
@@ -52,6 +53,7 @@ class Mic:
         self._audio = pyaudio.PyAudio()
         self._logger.info("Initialization of PyAudio completed.")
         self.stop_passive = False
+        self.speaker_lock = threading.Lock()
 
     def __del__(self):
         self._audio.terminate()
@@ -329,11 +331,14 @@ class Mic:
 
     def say(self, phrase,
             OPTIONS=" -vdefault+m3 -p 40 -s 160 --stdout > say.wav"):
+        
+        with self.speaker_lock:
+            self.speaker.say(phrase)
         if self.wxbot is not None:
-            wechatUser(self.profile, self.wxbot, "%s: %s" %
-                       (self.robot_name, phrase), "")
-        self.speaker.say(phrase)
+           wechatUser(self.profile, self.wxbot, "%s: %s" %
+                      (self.robot_name, phrase), "")
 
     def play(self, src):
         # play a voice
-        self.speaker.play(src)
+        with self.speaker_lock:
+            self.speaker.play(src)
