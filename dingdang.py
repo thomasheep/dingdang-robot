@@ -149,10 +149,8 @@ if __name__ == "__main__":
     print("*                                                     *")
     print("*******************************************************")
 
-    logging.basicConfig()
-    fm = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s]:%(message)s')
+    logging.basicConfig(format='[%(asctime)s][%(levelname)s][%(name)s]:%(message)s')
     logger = logging.getLogger()
-    logger.setFormatter(fm)
     # logger.getChild("client.stt").setLevel(logging.INFO)
 
     if args.debug:
