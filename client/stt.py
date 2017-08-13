@@ -371,7 +371,7 @@ class SnowboySTT(AbstractSTTEngine):
         ans = self.detector.RunDetection(data)
         t2 = time.time()
         if ans > 0:
-            # self._logger.info('snowboy Transcribed: %s , Time%fs', (self.hotword, t2-t1))
+            self._logger.info(u'nowboy Transcribed: %s , Time:%fs'%(self.hotword, t2-t1))
             return [self.hotword]
         else:
             return []
