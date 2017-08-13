@@ -1261,7 +1261,7 @@ class WXBot:
         tip = 1
 
         try_later_secs = 1
-        MAX_RETRY_TIMES = 1
+        MAX_RETRY_TIMES = 3
 
         code = UNKONWN
 

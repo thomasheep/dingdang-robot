@@ -18,7 +18,7 @@ def handle(text, mic, profile, wxbot=None):
                    number)
         wxbot -- wechat bot instance
     """
-    if wxbot!=None and wxbot.isLogin:
+    if wxbot!=None and wxbot.is_login:
         mic.say(u"微信已登录")
         return
     if 'wechat' not in profile or not profile['wechat'] or wxbot is None:
