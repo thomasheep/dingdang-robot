@@ -21,10 +21,7 @@ def handle(text, mic, profile, wxbot=None):
                    number)
         wxbot -- wechat bot instance
     """
-    wxbot = config.get_uni_obj('wxbot')
-    if wxbot!=None:
-        wxbot.is_alive = False
-
+   
     if 'wechat' not in profile or not profile['wechat']:
         mic.say(u'请先在配置文件中开启微信接入功能')
         return
@@ -41,6 +38,10 @@ def handle(text, mic, profile, wxbot=None):
     tryTimes = 10
     while tryTimes>0:
         tryTimes = tryTimes-1
+        wxbot = config.get_uni_obj('wx_bot')
+        if wxbot == None:
+            continue
+        
         with wxbot.qr_lock:
             if os.path.exists(wxbot.qr_file):
                 mic.say(u'正在发送微信登录二维码到您的邮箱')
