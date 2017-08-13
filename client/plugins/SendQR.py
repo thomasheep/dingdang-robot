@@ -3,6 +3,7 @@
 import os
 import sys
 from client import config
+import time
 
 
 WORDS = ["微信", "二维码"]
@@ -51,6 +52,7 @@ def handle(text, mic, profile, wxbot=None):
                     mic.say(u'发送失败')
             else:
                 mic.say(u"获取登录二维码失败，请重新尝试")
+            time.sleep(0.1)
     mic.say("启动微信登录失败，请重新尝试")
     
 
