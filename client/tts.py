@@ -68,7 +68,7 @@ class AbstractTTSEngine(object):
             f.seek(0)
             output = f.read()
             if output:
-                self._logger.debug("Output was: '%s'", output)
+                self._logger.debug("play Output was: '%s'", output)
 
 
 class AbstractMp3TTSEngine(AbstractTTSEngine):
@@ -84,15 +84,12 @@ class AbstractMp3TTSEngine(AbstractTTSEngine):
         cmd = ['play', str(filename)]
         self._logger.debug('Executing %s', ' '.join([pipes.quote(arg)
                                                      for arg in cmd]))
-        t1 = time.time()
         with tempfile.TemporaryFile() as f:
             subprocess.call(cmd, stdout=f, stderr=f)
             f.seek(0)
             output = f.read()
             if output:
-                self._logger.debug("Output was: '%s'", output)
-        t2 = time.time()
-        self._logger.debug("tts play mp3:%f", t2-t1)
+                self._logger.debug("play_mp3 Output was: '%s'", output)
 
 
 class SimpleMp3Player(AbstractMp3TTSEngine):
@@ -523,8 +520,12 @@ class BaiduTTS(AbstractMp3TTSEngine):
         self._logger.debug(u"Saying '%s' with '%s'", phrase, self.SLUG)
         tmpfile = self.get_speech(phrase)
         if tmpfile is not None:
+            t1 = time.time()
             self.play_mp3(tmpfile)
+            t2 = time.time()
             os.remove(tmpfile)
+            self._logger.info('baidu mp3 play time:%fs', t2-t1)
+            
 
 
 def get_default_engine_slug():
