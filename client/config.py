@@ -45,4 +45,4 @@ def set_uni_obj(k, v):
 
 
 def get_uni_obj(k):
-        return uni_obj[k]
+        return uni_obj.get(k,None)
