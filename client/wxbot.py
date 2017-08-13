@@ -1174,6 +1174,7 @@ class WXBot:
 
     def run(self, Mic=None):
         self.get_uuid()
+        self.mic = Mic
         qr_file = os.path.join(self.temp_pwd,'wxqr.png')
         with self.qr_lock:
             self.gen_qr_code(qr_file)
@@ -1206,8 +1207,12 @@ class WXBot:
         if self.get_contact():
             print '[INFO] Get %d contacts' % len(self.contact_list)
             print '[INFO] Start to process messages .'
+         if Mic is not None:
+               Mic.say("微信登录")
         self.proc_msg()
         self.is_login = False
+        if Mic is not None:
+               Mic.say("微信退出")
 
     def get_uuid(self):
         url = 'https://login.weixin.qq.com/jslogin'
