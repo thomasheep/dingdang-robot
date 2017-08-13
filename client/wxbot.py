@@ -1177,7 +1177,7 @@ class WXBot:
 
     def micSay(self, text):
         if self.mic != None:
-            t = threading.Thread(target=self.asyncSay, args=(text))
+            t = threading.Thread(target=self.asyncSay, args=(text,))
             t.setDaemon(True)
             t.start()
             return t
