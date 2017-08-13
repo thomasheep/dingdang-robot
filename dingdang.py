@@ -100,7 +100,7 @@ class Dingdang(object):
         tts_engine_class = tts.get_engine_by_slug(tts_engine_slug)
 
         # Initialize Mic
-       self.mic = Mic(
+        self.mic = Mic(
             self.config,
             tts_engine_class.get_instance(),
             stt_passive_engine_class.get_passive_instance(),
