@@ -113,17 +113,18 @@ class Dingdang(object):
         # create wechat robot
         if self.config['wechat']:
             logger.info("wxbot obj init")
-            wxbot = config.get_uni_obj('wxbot')
+            wb = config.get_uni_obj('wxbot')
             config.set_uni_obj('wxbot', None)    
-            if wxbot:
-                wxbot.is_alive = false
+            if wb:
+                wb.is_alive = false
             wxBot = WechatBot(self.conversation.brain)
             config.set_uni_obj('wxbot', wxBot)                        
             wxBot.DEBUG = True
             wxBot.conf['qr'] = 'tty'
             t = threading.Thread(target=self.wxbot_run, args=(wxBot,))
+            t.setDaemon(True)
             t.start()
-            return wxbot
+            return wxBot
       
     def wxbot_run(self, wb):
         logger.info("wxbot thread running")        
