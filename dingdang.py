@@ -112,17 +112,18 @@ class Dingdang(object):
     def start_wxbot(self):
         # create wechat robot
         if self.config['wechat']:
-            logger.info("wxbot thread start")
-            t = threading.Thread(target=self.wxbot_run)
+            logger.info("wxbot obj init")
+            wxBot = WechatBot(self.conversation.brain)
+            config.set_uni_obj('wxbot', wxBot)                        
+            wxBot.DEBUG = True
+            wxBot.conf['qr'] = 'tty'
+            t = threading.Thread(target=self.wxbot_run, args=(wxBot,))
             t.start()
       
-    def wxbot_run(self):
+    def wxbot_run(self, wb):
         logger.info("wxbot thread running")        
-        wxBot = WechatBot(self.conversation.brain)
-        wxBot.DEBUG = True
-        wxBot.conf['qr'] = 'tty'
         try:
-            wxBot.run(self.mic)
+            wb.run(self.mic)
         except Exception:
             logger.error("wxbot Error occured!", exc_info=True)
         finally:
