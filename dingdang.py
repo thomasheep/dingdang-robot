@@ -113,7 +113,7 @@ class Dingdang(object):
         # create wechat robot
         if self.config['wechat']:
             logger.info("wxbot obj init")
-            wxbot = config.get_uni_obj['wxbot']
+            wxbot = config.get_uni_obj('wxbot')
             config.set_uni_obj('wxbot', None)    
             if wxbot:
                 wxbot.is_alive = false
