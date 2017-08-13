@@ -116,7 +116,7 @@ class Dingdang(object):
             wb = config.get_uni_obj('wxbot')
             config.set_uni_obj('wxbot', None)    
             if wb:
-                wb.is_alive = false
+                wb.is_alive = False
             wxBot = WechatBot(self.conversation.brain)
             config.set_uni_obj('wxbot', wxBot)                        
             wxBot.DEBUG = True
