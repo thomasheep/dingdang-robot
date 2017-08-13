@@ -84,7 +84,7 @@ def emailUser(profile, SUBJECT="", BODY="", ATTACH_LIST=[]):
 def wechatUser(profile, wxbot, SUBJECT="", BODY="",
                ATTACH_LIST=[], IMAGE_LIST=[]):
     _logger = logging.getLogger(__name__)
-    if wxbot is not None and wxbot.my_account != {}:
+    if wxbot is not None and wxbot.is_login and wxbot.my_account != {}:
         try:
             # send message
             user_id = wxbot.my_account['UserName']

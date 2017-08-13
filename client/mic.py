@@ -38,7 +38,7 @@ class Mic:
             self.robot_name = profile['robot_name']
         self._logger = logging.getLogger(__name__)
         self.speaker = speaker
-        self.wxbot = None
+        # self.wxbot = None
         self.passive_stt_engine = passive_stt_engine
         self.active_stt_engine = active_stt_engine
         self.dingdangpath = dingdangpath
@@ -339,10 +339,19 @@ class Mic:
             t2 = time.time()
             self.speaker.say(phrase)
             t3 = time.time()
-        if self.wxbot is not None:
-            wechatUser(self.profile, self.wxbot, "%s: %s" %
+
+        wxbot = config.get_uni_obj('wxbot')
+        if wxbot is not None and wxbot.is_login:
+            wechatUser(self.profile, wxbot, "%s: %s" %
                       (self.robot_name, phrase), "")
         self._logger.info("Mic say(%s) LockTime:%fs, SpeakTime:%fs",phrase, t2-t1, t3-t2)
+
+    def asyncSay(self, phrase):
+        t = threading.Thread(target=self.say)
+        t.setDaemon(True)
+        t.start()
+        return t
+
 
     def play(self, src):
         # play a voice

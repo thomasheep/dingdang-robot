@@ -3,7 +3,12 @@ import dingdangpath
 import logging
 import os
 import yaml
+import threading
+
+uni_lock = threading.Lock()
+
 logger = logging.getLogger(__name__)
+
 
 def get_config():
         # Create config dir if it does not exist yet
@@ -32,3 +37,19 @@ def get_config():
             raise
 
 profile = get_config()
+
+uni_obj = {}
+
+def set_uni_obj(k, v):
+    with uni_lock:
+        uni_obj[k] = v
+
+
+def get_uni_obj(k):
+    with uni_lock:
+        if uni_obj[k]:
+            return uni_obj[k]
+        return None
+
+profile.set_uni_obj = set_uni_obj
+profile.get_uni_obj = get_uni_obj

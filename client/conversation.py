@@ -4,6 +4,7 @@ from notifier import Notifier
 from brain import Brain
 import time
 import random
+from client import config
 
 
 class Conversation(object):
@@ -15,7 +16,6 @@ class Conversation(object):
         self.profile = profile
         self.brain = Brain(mic, profile)
         self.notifier = Notifier(profile, self.brain)
-        self.wxbot = None
 
     def is_proper_time(self):
         """
@@ -49,12 +49,16 @@ class Conversation(object):
                           self.persona)
         while True:
             # Print notifications until empty
-            if self.is_proper_time():
-                notifications = self.notifier.getAllNotifications()
-                for notif in notifications:
+
+            notifications = self.notifier.getAllNotifications()
+            for notif in notifications:
+                if self.is_proper_time():
                     self._logger.info("Received notification: '%s'",
                                       str(notif))
                     self.mic.say(str(notif))
+                else:
+                    self._logger.info("not in proper time, Received notification: '%s'",
+                                      str(notif))
 
             if self.mic.stop_passive:
                 continue
@@ -76,6 +80,7 @@ class Conversation(object):
             self._logger.debug("Stopped to listen actively with threshold: %r",
                                threshold)
             if input:
-                self.brain.query(input, self.wxbot)
+                wxbot = config.get_uni_obj('wxbot')
+                self.brain.query(input, wxbot)
             else:
                 self.mic.say("什么?没有听清楚")

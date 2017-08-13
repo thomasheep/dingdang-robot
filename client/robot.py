@@ -5,6 +5,7 @@ import logging
 from uuid import getnode as get_mac
 from app_utils import sendToUser
 from abc import ABCMeta, abstractmethod
+from client import config
 
 import sys
 reload(sys)
@@ -19,7 +20,7 @@ class AbstractRobot(object):
     def get_instance(cls, mic, profile, wxbot=None):
         instance = cls(mic, profile, wxbot)
         cls.mic = mic
-        cls.wxbot = wxbot
+        # cls.wxbot = wxbot
         return instance
 
     def __init__(self, **kwargs):
@@ -41,7 +42,7 @@ class TulingRobot(AbstractRobot):
         super(self.__class__, self).__init__()
         self.mic = mic
         self.profile = profile
-        self.wxbot = wxbot
+        # self.wxbot = wxbot
         self.tuling_key = self.get_key()
 
     def get_key(self):
@@ -87,11 +88,12 @@ class TulingRobot(AbstractRobot):
                self.profile['read_long_content'] is not None and \
                not self.profile['read_long_content']:
                 target = '邮件'
-                if self.wxbot is not None and self.wxbot.my_account != {} \
+                wxbot = config.get_uni_obj('wxbot')
+                if wxbot is not None and wxbot.my_account != {} \
                    and not self.profile['prefers_email']:
                     target = '微信'
                 self.mic.say(u'一言难尽啊，我给您发%s吧' % target)
-                if sendToUser(self.profile, self.wxbot, u'回答%s' % msg, result):
+                if sendToUser(self.profile, wxbot, u'回答%s' % msg, result):
                     self.mic.say(u'%s发送成功！' % target)
                 else:
                     self.mic.say(u'抱歉，%s发送失败了！' % target)

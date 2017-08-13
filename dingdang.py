@@ -17,6 +17,7 @@ from client import diagnose
 from client.wxbot import WXBot
 from client.conversation import Conversation
 from client.tts import SimpleMp3Player
+import threading
 # Add dingdangpath.LIB_PATH to sys.path
 sys.path.append(dingdangpath.LIB_PATH)
 
@@ -75,6 +76,7 @@ class Dingdang(object):
         self._logger = logging.getLogger(__name__)
         self.config = config.profile
 
+
         try:
             stt_engine_slug = self.config['stt_engine']
         except KeyError:
@@ -98,23 +100,34 @@ class Dingdang(object):
         tts_engine_class = tts.get_engine_by_slug(tts_engine_slug)
 
         # Initialize Mic
-        self.mic = Mic(
+        mic = Mic(
             self.config,
             tts_engine_class.get_instance(),
             stt_passive_engine_class.get_passive_instance(),
             stt_engine_class.get_active_instance())
+        
+        config.set_uni_obj('mic', mic)
+        self.mic = config.get_uni_obj('mic')
 
     def start_wxbot(self):
-        runTimes = 1
-        while True:
-            logger.info("wxbot run %d"%runTimes)
-            try:
-                self.wxBot.run(self.mic)
-            except Exception:
-                logger.error("wxbot Error occured!", exc_info=True)
-
-            logger.info("wxbot run finished!")
-            runTimes += 1
+        # create wechat robot
+        if self.config['wechat']:
+            while True:
+                logger.info("wxbot thread start")
+                t = threading.Thread(target=self.wxbot_run)
+                t.start()
+      
+    def wxbot_run(self):
+        logger.info("wxbot thread running")        
+        wxBot = WechatBot(self.conversation.brain)
+        wxBot.DEBUG = True
+        wxBot.conf['qr'] = 'tty'
+        try:
+            wxBot.run(self.mic)
+        except Exception:
+            logger.error("wxbot Error occured!", exc_info=True)
+        finally:
+            logger.info("wxbot  thread finished!")
 
     def run(self):
         persona = '小安'
@@ -126,19 +139,11 @@ class Dingdang(object):
 
         salutation = random.choice(["%s,%s 竭诚为您服务?" % (master, persona), "%s，请尽情吩咐 %s" % (master, persona)])
 
-        conversation = Conversation(persona, self.mic, self.config)
-
-        # create wechat robot
-        if self.config['wechat']:
-            self.wxBot = WechatBot(conversation.brain)
-            self.wxBot.DEBUG = True
-            self.wxBot.conf['qr'] = 'tty'
-            conversation.wxbot = self.wxBot
-            t = threading.Thread(target=self.start_wxbot)
-            t.start()
+        self.conversation = Conversation(persona, self.mic, self.config)
+        self.start_wxbot()
 
         self.mic.say(salutation)
-        conversation.handleForever()
+        self.conversation.handleForever()
 
 
 if __name__ == "__main__":
@@ -168,6 +173,7 @@ if __name__ == "__main__":
 
     try:
         app = Dingdang()
+        config.get_uni_obj('app', app)
     except Exception:
         logger.error("Error occured!", exc_info=True)
         sys.exit(1)
