@@ -1172,10 +1172,10 @@ class WXBot:
                 return pm.group(1)
         return 'unknown'
 
-    def asyncSay(text):
+    def asyncSay(self, text):
         self.mic.say(text)
 
-    def micSay(text):
+    def micSay(self, text):
         if self.mic != None:
             t = threading.Thread(target=self.asyncSay, args=(text))
             t.setDaemon(True)
