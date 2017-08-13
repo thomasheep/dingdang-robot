@@ -44,11 +44,14 @@ def handle(text, mic, profile, wxbot=None):
             continue
         with wxbot.qr_lock:
             if os.path.exists(wxbot.qr_file):
+                t.join()
                 t = mic.asyncSay(u'正在发送微信登录二维码到您的邮箱')
                 if emailUser(profile, u"这是您的微信登录二维码", "", [wxbot.qr_file]):
+                    t.join()
                     t = mic.asyncSay(u'发送成功')
                     return
                 else:
+                    t.join()
                     t = mic.asyncSay(u'发送失败')
                     return
                     
