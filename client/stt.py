@@ -16,7 +16,7 @@ import vocabcompiler
 from uuid import getnode as get_mac
 
 import sys
-
+import time
 reload(sys)
 sys.setdefaultencoding('utf8')
 
@@ -244,6 +244,7 @@ class BaiduSTT(AbstractSTTEngine):
             return ''
 
     def transcribe(self, fp):
+        
         try:
             wav_file = wave.open(fp, 'rb')
         except IOError:
@@ -251,6 +252,7 @@ class BaiduSTT(AbstractSTTEngine):
                                   fp,
                                   exc_info=True)
             return []
+        t1 = time.time()
         n_frames = wav_file.getnframes()
         frame_rate = wav_file.getframerate()
         audio = wav_file.readframes(n_frames)
@@ -293,7 +295,8 @@ class BaiduSTT(AbstractSTTEngine):
             transcribed = []
             if text:
                 transcribed.append(text.upper())
-            self._logger.info(u'Transcribed: %s' % text)
+            t2 = time.time()
+            self._logger.info(u'baidu-stt Transcribed: %s, time:%fs' % text, t2-t1)
             return transcribed
 
     @classmethod
@@ -362,11 +365,13 @@ class SnowboySTT(AbstractSTTEngine):
         return config
 
     def transcribe(self, fp):
+        t1 = time.time()
         fp.seek(44)
         data = fp.read()
         ans = self.detector.RunDetection(data)
+        t2 = time.time()
         if ans > 0:
-            self._logger.info('Transcribed: %s', self.hotword)
+            self._logger.info('snowboy Transcribed: %s , Time%fs', self.hotword, t2-t1)
             return [self.hotword]
         else:
             return []

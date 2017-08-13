@@ -27,7 +27,7 @@ def handle(text, mic, profile, wxbot=None):
     elif wxbot !=None:
         mic.say(u"微信可能正在登录中，将重新发送二维码登录")
 
-    if 'wechat' not in profile or not profile['wechat'] or wxbot is None:
+    if 'wechat' not in profile or not profile['wechat']:
         mic.say(u'请先在配置文件中开启微信接入功能')
         return
     if 'email' not in profile or ('enable' in profile['email']
