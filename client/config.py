@@ -50,6 +50,3 @@ def get_uni_obj(k):
         if uni_obj[k]:
             return uni_obj[k]
         return None
-
-profile.set_uni_obj = set_uni_obj
-profile.get_uni_obj = get_uni_obj

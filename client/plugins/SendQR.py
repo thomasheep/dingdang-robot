@@ -20,7 +20,7 @@ def handle(text, mic, profile, wxbot=None):
                    number)
         wxbot -- wechat bot instance
     """
-    wxbot = profile.get_uni_obj('wxbot')
+    wxbot = config.get_uni_obj('wxbot')
     if wxbot!=None and wxbot.is_login:
         mic.say(u"微信已登录,将重新发送二维码登录")
     elif wxbot!=None：
