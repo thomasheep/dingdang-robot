@@ -348,7 +348,7 @@ class Mic:
         self._logger.info("Mic say(%s) LockTime:%fs, SpeakTime:%fs",phrase, t2-t1, t3-t2)
 
     def asyncSay(self, phrase):
-        t = threading.Thread(target=self.say)
+        t = threading.Thread(target=self.say, args=(phrase,))
         t.setDaemon(True)
         t.start()
         return t
