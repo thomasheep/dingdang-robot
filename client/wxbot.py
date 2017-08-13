@@ -1172,6 +1172,17 @@ class WXBot:
                 return pm.group(1)
         return 'unknown'
 
+    def asyncSay(text):
+        self.mic.say(text)
+
+    def micSay(text):
+        if self.mic != None:
+            t = threading.Thread(target=self.asyncSay, args=(text))
+            t.setDaemon(True)
+            t.start()
+            return t
+        return None
+
     def run(self, Mic=None):
         self.get_uuid()
         self.mic = Mic
@@ -1197,22 +1208,28 @@ class WXBot:
             print '[ERROR] Web WeChat login failed .'
             return
 
+        t = micSay("微信已登录")
+
         if self.init():
             print '[INFO] Web WeChat init succeed .'
         else:
             print '[INFO] Web WeChat init failed'
-            self.is_login = False            
+            self.is_login = False
+            while t.isAlive():
+                time.sleep(0.1) 
+            t = micSay("微信初始化失败，请重新登录")
             return
         self.status_notify()
         if self.get_contact():
             print '[INFO] Get %d contacts' % len(self.contact_list)
             print '[INFO] Start to process messages .'
-        if Mic is not None:
-               Mic.say("微信已登录")
+       
         self.proc_msg()
         self.is_login = False
         if Mic is not None:
-               Mic.say("微信已退出")
+            while t.isAlive():
+                time.sleep(0.1) 
+                t = micSay("微信已退出，请重新登录")
 
     def get_uuid(self):
         url = 'https://login.weixin.qq.com/jslogin'
