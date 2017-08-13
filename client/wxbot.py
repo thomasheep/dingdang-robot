@@ -1207,7 +1207,7 @@ class WXBot:
         if self.get_contact():
             print '[INFO] Get %d contacts' % len(self.contact_list)
             print '[INFO] Start to process messages .'
-         if Mic is not None:
+        if Mic is not None:
                Mic.say("微信登录")
         self.proc_msg()
         self.is_login = False
