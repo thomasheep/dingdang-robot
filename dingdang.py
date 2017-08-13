@@ -173,7 +173,7 @@ if __name__ == "__main__":
 
     try:
         app = Dingdang()
-        config.get_uni_obj('app', app)
+        config.set_uni_obj('app', app)
     except Exception:
         logger.error("Error occured!", exc_info=True)
         sys.exit(1)

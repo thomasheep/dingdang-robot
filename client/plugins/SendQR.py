@@ -24,7 +24,7 @@ def handle(text, mic, profile, wxbot=None):
     wxbot = config.get_uni_obj('wxbot')
     if wxbot!=None and wxbot.is_login:
         mic.say(u"微信已登录,将重新发送二维码登录")
-    elif wxbot!=None：
+    elif wxbot !=None:
         mic.say(u"微信可能正在登录中，将重新发送二维码登录")
 
     if 'wechat' not in profile or not profile['wechat'] or wxbot is None:
@@ -42,18 +42,20 @@ def handle(text, mic, profile, wxbot=None):
     app.start_wxbot()
     tryTimes = 10
     while tryTimes>0:
-        tryTimes--
+        tryTimes = tryTimes-1
         with wxbot.qr_lock:
             if os.path.exists(wxbot.qr_file):
                 mic.say(u'正在发送微信登录二维码到您的邮箱')
                 if emailUser(profile, u"这是您的微信登录二维码", "", [wxbot.qr_file]):
                     mic.say(u'发送成功')
+                    return
                 else:
                     mic.say(u'发送失败')
+                    return
+                    
             else:
-                mic.say(u"获取登录二维码失败，请重新尝试")
-            time.sleep(0.1)
-    mic.say("启动微信登录失败，请重新尝试")
+                time.sleep(0.1)
+    mic.say(u"获取登录二维码失败，请重新尝试")
     
 
 def isValid(text):
