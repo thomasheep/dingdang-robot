@@ -513,18 +513,18 @@ class BaiduTTS(AbstractMp3TTSEngine):
             f.write(r.content)
             tmpfile = f.name
         t3 = time.time()
-        self._logger.info('baidu tts cloud time:%fs, write file time:%fs', t2-t1, t3-t2)
+        self._logger.info('%s : cloud time:%fs, write file time:%fs', self.SLUG, t2-t1, t3-t2)
         return tmpfile
 
     def say(self, phrase):
-        self._logger.debug(u"Saying '%s' with '%s'", phrase, self.SLUG)
+        self._logger.info('%s say:(%s)', self.SLUG, phrase)
         tmpfile = self.get_speech(phrase)
         if tmpfile is not None:
             t1 = time.time()
             self.play_mp3(tmpfile)
             t2 = time.time()
             os.remove(tmpfile)
-            self._logger.info('baidu mp3 play time:%fs', t2-t1)
+            self._logger.info('%s : audio play time:%fs', self.SLUG, t2-t1)
             
 
 
