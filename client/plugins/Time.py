@@ -8,6 +8,7 @@ import re
 WORDS = ["时间"]
 SLUG = "time"
 
+pattern = re.compile(r'')
 
 def handle(text, mic, profile, wxbot=None):
     """

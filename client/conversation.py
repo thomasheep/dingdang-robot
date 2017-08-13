@@ -3,6 +3,7 @@ import logging
 from notifier import Notifier
 from brain import Brain
 import time
+import random
 
 
 class Conversation(object):
