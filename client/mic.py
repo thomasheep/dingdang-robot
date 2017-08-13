@@ -331,14 +331,26 @@ class Mic:
 
     def say(self, phrase,
             OPTIONS=" -vdefault+m3 -p 40 -s 160 --stdout > say.wav"):
-        
+        t1 = time.time()
+        t2 = t1
+        t3 = t2
         with self.speaker_lock:
+            t2 = time.time()
             self.speaker.say(phrase)
+            t3 = time.time()
         if self.wxbot is not None:
-           wechatUser(self.profile, self.wxbot, "%s: %s" %
+            wechatUser(self.profile, self.wxbot, "%s: %s" %
                       (self.robot_name, phrase), "")
+        self._logger.info("Mic ay(%s) LockTime:%ds, SpeakTime:%ds",phrase, t2-t1, t3-t2)
 
     def play(self, src):
         # play a voice
+        t1 = time.time()
+        t2 = t1
+        t3 = t2
         with self.speaker_lock:
+            t2 = time.time()
             self.speaker.play(src)
+            t3 = time.time()
+        self._logger.info("Mic play(%s) LockTime:%ds, SpeakTime:%ds",src, t2-t1, t3-t2)
+        

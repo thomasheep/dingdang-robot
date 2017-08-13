@@ -1215,8 +1215,7 @@ class WXBot:
         else:
             print '[INFO] Web WeChat init failed'
             self.is_login = False
-            while t.isAlive():
-                time.sleep(0.1) 
+            t.join()
             t = self.micSay("微信初始化失败，请重新登录")
             return
         self.status_notify()
@@ -1227,9 +1226,9 @@ class WXBot:
         self.proc_msg()
         self.is_login = False
         if Mic is not None:
-            while t.isAlive():
-                time.sleep(0.1) 
-                t = self.micSay("微信已退出，请重新登录")
+            t.join()
+            t = self.micSay("微信已退出，请重新登录")
+            t.join()
 
     def get_uuid(self):
         url = 'https://login.weixin.qq.com/jslogin'
