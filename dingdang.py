@@ -100,19 +100,23 @@ class Dingdang(object):
         tts_engine_class = tts.get_engine_by_slug(tts_engine_slug)
 
         # Initialize Mic
-        mic = Mic(
+       self.mic = Mic(
             self.config,
             tts_engine_class.get_instance(),
             stt_passive_engine_class.get_passive_instance(),
             stt_engine_class.get_active_instance())
         
-        config.set_uni_obj('mic', mic)
-        self.mic = config.get_uni_obj('mic')
+        # config.set_uni_obj('mic', mic)
+        # self.mic = config.get_uni_obj('mic')
 
     def start_wxbot(self):
         # create wechat robot
         if self.config['wechat']:
             logger.info("wxbot obj init")
+            wxbot = config.get_uni_obj['wxbot']
+            config.set_uni_obj('wxbot', None)    
+            if wxbot:
+                wxbot.is_alive = false
             wxBot = WechatBot(self.conversation.brain)
             config.set_uni_obj('wxbot', wxBot)                        
             wxBot.DEBUG = True
