@@ -112,10 +112,9 @@ class Dingdang(object):
     def start_wxbot(self):
         # create wechat robot
         if self.config['wechat']:
-            while True:
-                logger.info("wxbot thread start")
-                t = threading.Thread(target=self.wxbot_run)
-                t.start()
+            logger.info("wxbot thread start")
+            t = threading.Thread(target=self.wxbot_run)
+            t.start()
       
     def wxbot_run(self):
         logger.info("wxbot thread running")        
