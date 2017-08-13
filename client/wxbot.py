@@ -1245,7 +1245,6 @@ class WXBot:
             if self.is_alive and t:
                 self.mic.say("微信已退出，请重新登录")
             self.is_login = False
-            os.remove(self.qr_file)
         
 
     def get_uuid(self):

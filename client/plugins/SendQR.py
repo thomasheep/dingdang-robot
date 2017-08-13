@@ -38,6 +38,9 @@ def handle(text, mic, profile, wxbot=None):
     tryTimes = 10
     while tryTimes>0:
         tryTimes = tryTimes-1
+        if wxbot.qr_file == None:
+            time.sleep(0.1)
+            continue
         with wxbot.qr_lock:
             if os.path.exists(wxbot.qr_file):
                 mic.say(u'正在发送微信登录二维码到您的邮箱')
