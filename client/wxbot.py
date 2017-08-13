@@ -92,6 +92,7 @@ class WXBot:
         self.sync_key = []
         self.sync_host = ''
         self.is_login = False
+        self.is_alive = True
         self.mic = None
         self.qr_file = None
         self.qr_lock = threading.Lock()
@@ -1181,53 +1182,58 @@ class WXBot:
         return 'unknown'
 
     def run(self, Mic=None):
-        self.get_uuid()
-        self.mic = Mic
-        # qr_file = os.path.join(self.temp_pwd,'wxqr.png')
-        with self.qr_lock:
-            self.qr_file = os.path.join(self.temp_pwd, self.uuid+'_wxqr.png')
-            self.gen_qr_code(self.qr_file)
-            print '[INFO] Please use WeChat to scan the QR code .'
-        
-        config.set_uni_obj('wxbot', self)
-
-        result = self.wait4login()
-        print '[INFO] login status return and remove QR code .'        
-        if result != SUCCESS:
-            print '[ERROR] Web WeChat login failed. failed code=%s' % (result,)
-            return
-
-        if self.login():
-            print '[INFO] Web WeChat login succeed .'
-           
-        else:
-            print '[ERROR] Web WeChat login failed .'
-            return
-
-        t = self.mic.asyncSay("微信已登录,正在初始化")
-
-        if self.init():
-            print '[INFO] Web WeChat init succeed .'
-        else:
-            print '[INFO] Web WeChat init failed'
-            t.join()
-            t = self.mic.asyncSay("微信初始化失败，请重新登录")
-           
-            return
-        self.status_notify()
-        if self.get_contact():
-            print '[INFO] Get %d contacts' % len(self.contact_list)
-            print '[INFO] Start to process messages .'
-        t.join()
-        t = self.mic.asyncSay("微信初始化完成，可以发送消息了")
-        self.is_login = True
-        self.proc_msg()
-        config.set_uni_obj('wxbot', None)
-        if Mic is not None:
-            t.join()
-            t = self.mic.asyncSay("微信已退出，请重新登录")
-            t.join()
-        os.remove(self.qr_file)
+        try:
+            self.get_uuid()
+            self.mic = Mic
+            # qr_file = os.path.join(self.temp_pwd,'wxqr.png')
+            with self.qr_lock:
+                self.qr_file = os.path.join(self.temp_pwd, self.uuid+'_wxqr.png')
+                self.gen_qr_code(self.qr_file)
+                print '[INFO] Please use WeChat to scan the QR code .'
+            
+            config.set_uni_obj('wxbot', self)
+    
+            result = self.wait4login()
+            print '[INFO] login status return and remove QR code .'        
+            if result != SUCCESS:
+                print '[ERROR] Web WeChat login failed. failed code=%s' % (result,)
+                return
+    
+            if self.login():
+                print '[INFO] Web WeChat login succeed .'
+               
+            else:
+                print '[ERROR] Web WeChat login failed .'
+                return
+            
+            t = self.mic.asyncSay("微信已登录,正在初始化")
+    
+            if self.init():
+                print '[INFO] Web WeChat init succeed .'
+            else:
+                print '[INFO] Web WeChat init failed'
+                if self.is_alive:
+                    t.join()
+                    t = self.mic.asyncSay("微信初始化失败，请重新登录")
+               
+                return
+            self.status_notify()
+            if self.get_contact():
+                print '[INFO] Get %d contacts' % len(self.contact_list)
+                print '[INFO] Start to process messages .'
+            if self.is_alive:
+                t.join()
+                t = self.mic.asyncSay("微信初始化完成，可以发送消息了")
+            self.is_login = True
+            self.proc_msg()
+            
+            if self.is_alive:
+                t.join()
+                t = self.mic.asyncSay("微信已退出，请重新登录")
+                t.join()
+        finally:
+            config.set_uni_obj('wxbot', None)
+            os.remove(self.qr_file)
         
 
     def get_uuid(self):

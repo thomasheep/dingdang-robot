@@ -22,8 +22,8 @@ def handle(text, mic, profile, wxbot=None):
         wxbot -- wechat bot instance
     """
     wxbot = config.get_uni_obj('wxbot')
-    if wxbot!=None and wxbot.is_login:
-        mic.say(u"微信已登录,将发送二维码重新登录")
+    if wxbot!=None:
+        wxbot.is_alive = False
 
     if 'wechat' not in profile or not profile['wechat']:
         mic.say(u'请先在配置文件中开启微信接入功能')
