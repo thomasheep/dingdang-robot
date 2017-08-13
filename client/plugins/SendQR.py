@@ -21,7 +21,7 @@ def handle(text, mic, profile, wxbot=None):
                    number)
         wxbot -- wechat bot instance
     """
-   
+    
     if 'wechat' not in profile or not profile['wechat']:
         mic.say(u'请先在配置文件中开启微信接入功能')
         return
@@ -35,7 +35,7 @@ def handle(text, mic, profile, wxbot=None):
     # dest_file = os.path.join(mic.dingdangpath.TEMP_PATH, 'wxqr.png')
     app = config.get_uni_obj('app')
     wxbot = app.start_wxbot()
-    mic.asycSay("正在获取微信二维码")
+    t = mic.asyncSay("正在获取微信二维码")
     tryTimes = 30
     while tryTimes>0:
         tryTimes = tryTimes-1
@@ -44,16 +44,17 @@ def handle(text, mic, profile, wxbot=None):
             continue
         with wxbot.qr_lock:
             if os.path.exists(wxbot.qr_file):
-                mic.asycSay(u'正在发送微信登录二维码到您的邮箱')
+                t = mic.asyncSay(u'正在发送微信登录二维码到您的邮箱')
                 if emailUser(profile, u"这是您的微信登录二维码", "", [wxbot.qr_file]):
-                    mic.asycSay(u'发送成功')
+                    t = mic.asyncSay(u'发送成功')
                     return
                 else:
-                    mic.asycSay(u'发送失败')
+                    t = mic.asyncSay(u'发送失败')
                     return
                     
         time.sleep(0.1)
-    mic.asycSay(u"获取登录二维码失败，请重新尝试")
+    t.join()
+    mic.say(u"获取登录二维码失败，请重新尝试")
     
 
 def isValid(text):
