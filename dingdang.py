@@ -123,6 +123,7 @@ class Dingdang(object):
             wxBot.conf['qr'] = 'tty'
             t = threading.Thread(target=self.wxbot_run, args=(wxBot,))
             t.start()
+            return wxbot
       
     def wxbot_run(self, wb):
         logger.info("wxbot thread running")        

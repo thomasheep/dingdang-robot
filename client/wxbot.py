@@ -95,6 +95,7 @@ class WXBot:
         self.is_alive = True
         self.mic = None
         self.qr_file = None
+        self.qr_cond = threading.Condition()
         self.qr_lock = threading.Lock()
 
         self.batch_count = 50    #一次拉取50个联系人的信息
@@ -1180,6 +1181,13 @@ class WXBot:
             if pm:
                 return pm.group(1)
         return 'unknown'
+
+    def waitfor_qrfile(self, t):
+        self.qr_cond.wait(t)
+    
+    def notify_qrfile(self):
+        self.qr_cond.notify_all()
+
 
     def run(self, Mic=None):
         t = None
