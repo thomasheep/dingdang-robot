@@ -35,7 +35,8 @@ def handle(text, mic, profile, wxbot=None):
     # dest_file = os.path.join(mic.dingdangpath.TEMP_PATH, 'wxqr.png')
     app = config.get_uni_obj('app')
     wxbot = app.start_wxbot()
-    tryTimes = 10
+    mic.asycSay("正在获取微信二维码")
+    tryTimes = 30
     while tryTimes>0:
         tryTimes = tryTimes-1
         if wxbot.qr_file == None:
@@ -43,16 +44,16 @@ def handle(text, mic, profile, wxbot=None):
             continue
         with wxbot.qr_lock:
             if os.path.exists(wxbot.qr_file):
-                mic.say(u'正在发送微信登录二维码到您的邮箱')
+                mic.asycSay(u'正在发送微信登录二维码到您的邮箱')
                 if emailUser(profile, u"这是您的微信登录二维码", "", [wxbot.qr_file]):
-                    mic.say(u'发送成功')
+                    mic.asycSay(u'发送成功')
                     return
                 else:
-                    mic.say(u'发送失败')
+                    mic.asycSay(u'发送失败')
                     return
                     
         time.sleep(0.1)
-    mic.say(u"获取登录二维码失败，请重新尝试")
+    mic.asycSay(u"获取登录二维码失败，请重新尝试")
     
 
 def isValid(text):
