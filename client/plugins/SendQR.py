@@ -38,7 +38,7 @@ def handle(text, mic, profile, wxbot=None):
     from app_utils import emailUser
 
     # dest_file = os.path.join(mic.dingdangpath.TEMP_PATH, 'wxqr.png')
-    app = profile.get_uni('app')
+    app = profile.get_uni_obj('app')
     app.start_wxbot()
     tryTimes = 10
     while tryTimes>0:
