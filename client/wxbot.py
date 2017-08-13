@@ -1195,6 +1195,8 @@ class WXBot:
             print '[INFO] login status return and remove QR code .'        
             if result != SUCCESS:
                 print '[ERROR] Web WeChat login failed. failed code=%s' % (result,)
+                if result == TIMEOUT
+                    self.mic.say("微信登录超时，请重新尝试")
                 return
     
             if self.login():
@@ -1225,11 +1227,11 @@ class WXBot:
             self.is_login = True
             self.proc_msg()
             
+            
+        finally:
             if self.is_alive:
                 t.join()
-                t = self.mic.asyncSay("微信已退出，请重新登录")
-                t.join()
-        finally:
+                self.mic.say("微信已退出，请重新登录")
             os.remove(self.qr_file)
         
 
@@ -1285,7 +1287,7 @@ class WXBot:
         tip = 1
 
         try_later_secs = 1
-        MAX_RETRY_TIMES = 3
+        MAX_RETRY_TIMES = 1
 
         code = UNKONWN
 
