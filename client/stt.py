@@ -296,7 +296,7 @@ class BaiduSTT(AbstractSTTEngine):
             if text:
                 transcribed.append(text.upper())
             t2 = time.time()
-            self._logger.info(u'baidu-stt Transcribed: %s, time:%fs' % text, t2-t1)
+            self._logger.info(u'baidu-stt Transcribed: %s, time:%fs' % (text, t2-t1))
             return transcribed
 
     @classmethod
@@ -371,7 +371,7 @@ class SnowboySTT(AbstractSTTEngine):
         ans = self.detector.RunDetection(data)
         t2 = time.time()
         if ans > 0:
-            self._logger.info('snowboy Transcribed: %s , Time%fs', self.hotword, t2-t1)
+            self._logger.info('snowboy Transcribed: %s , Time%fs', (self.hotword, t2-t1))
             return [self.hotword]
         else:
             return []
