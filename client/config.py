@@ -41,12 +41,8 @@ profile = get_config()
 uni_obj = {}
 
 def set_uni_obj(k, v):
-    with uni_lock:
         uni_obj[k] = v
 
 
 def get_uni_obj(k):
-    with uni_lock:
-        if uni_obj[k]:
-            return uni_obj[k]
-        return None
+        return uni_obj[k]

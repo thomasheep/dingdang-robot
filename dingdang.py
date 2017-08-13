@@ -140,7 +140,7 @@ class Dingdang(object):
         salutation = random.choice(["%s,%s 竭诚为您服务?" % (master, persona), "%s，请尽情吩咐 %s" % (master, persona)])
 
         self.conversation = Conversation(persona, self.mic, self.config)
-        self.start_wxbot()
+        # self.start_wxbot()
 
         self.mic.say(salutation)
         self.conversation.handleForever()

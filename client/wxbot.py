@@ -1195,7 +1195,7 @@ class WXBot:
             print '[INFO] login status return and remove QR code .'        
             if result != SUCCESS:
                 print '[ERROR] Web WeChat login failed. failed code=%s' % (result,)
-                if result == TIMEOUT:
+                if result == TIMEOUT and self.is_alive:
                     self.mic.say("微信登录超时，请重新尝试")
                 return
     
