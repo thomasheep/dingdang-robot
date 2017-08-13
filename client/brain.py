@@ -127,7 +127,7 @@ class Brain(object):
                         reply = u"抱歉，我的大脑出故障了，晚点再试试吧"
                         self.mic.say(reply)
                     else:
-                        self._logger.info("Handling of phrase '%s' by " +
+                        self._logger.info("Handled of phrase '%s' by " +
                                            "plugin '%s' completed", text,
                                            plugin.__name__)
                     finally:
@@ -146,7 +146,7 @@ class Brain(object):
                         reply = u"抱歉，我的大脑出故障了，晚点再试试吧"
                         self.mic.say(reply)
                     else:
-                        self._logger.info("Handling of phrase '%s' by " +
+                        self._logger.info("Handled of phrase '%s' by " +
                                            "plugin '%s' completed", text,
                                            plugin.__name__)
                     finally:

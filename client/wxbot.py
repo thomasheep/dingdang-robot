@@ -1182,6 +1182,7 @@ class WXBot:
         return 'unknown'
 
     def run(self, Mic=None):
+        t = None
         try:
             self.get_uuid()
             self.mic = Mic
@@ -1212,8 +1213,9 @@ class WXBot:
                 print '[INFO] Web WeChat init succeed .'
             else:
                 print '[INFO] Web WeChat init failed'
-                if self.is_alive:
+                if t:
                     t.join()
+                if self.is_alive:
                     t = self.mic.asyncSay("微信初始化失败，请重新登录")
                
                 return
@@ -1221,16 +1223,18 @@ class WXBot:
             if self.get_contact():
                 print '[INFO] Get %d contacts' % len(self.contact_list)
                 print '[INFO] Start to process messages .'
+            if t:
+               t.join()
             if self.is_alive:
-                t.join()
                 t = self.mic.asyncSay("微信初始化完成，可以发送消息了")
             self.is_login = True
             self.proc_msg()
             
             
         finally:
-            if self.is_alive:
-                t.join()
+            if t:
+               t.join()
+            if self.is_alive and t:
                 self.mic.say("微信已退出，请重新登录")
             self.is_login = False
             os.remove(self.qr_file)

@@ -40,6 +40,7 @@ def handle(text, mic, profile, wxbot=None):
         tryTimes = tryTimes-1
         wxbot = config.get_uni_obj('wx_bot')
         if wxbot == None:
+            time.sleep(0.1)
             continue
         
         with wxbot.qr_lock:
