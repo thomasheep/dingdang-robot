@@ -17,6 +17,7 @@ import random
 from traceback import format_exc
 from requests.exceptions import ConnectionError, ReadTimeout
 import HTMLParser
+import threading
 
 UNKONWN = 'unkonwn'
 SUCCESS = '200'
@@ -85,6 +86,7 @@ class WXBot:
         self.sync_key = []
         self.sync_host = ''
         self.is_login = False
+        self.qr_lock = threading.Lock()
 
         self.batch_count = 50    #一次拉取50个联系人的信息
         self.full_user_name_list = []    #直接获取不到通讯录时，获取的username列表
@@ -1172,10 +1174,15 @@ class WXBot:
 
     def run(self, Mic=None):
         self.get_uuid()
-        self.gen_qr_code(os.path.join(self.temp_pwd,'wxqr.png'))
-        print '[INFO] Please use WeChat to scan the QR code .'
+        qr_file = os.path.join(self.temp_pwd,'wxqr.png')
+        with self.qr_lock:
+            self.gen_qr_code(qr_file)
+            print '[INFO] Please use WeChat to scan the QR code .'
 
         result = self.wait4login()
+        #success or fail then remove qr file
+        print '[INFO] login status return and remove QR code .'        
+        os.remove(qr_file)
         if result != SUCCESS:
             print '[ERROR] Web WeChat login failed. failed code=%s' % (result,)
             return
@@ -1193,12 +1200,14 @@ class WXBot:
             print '[INFO] Web WeChat init succeed .'
         else:
             print '[INFO] Web WeChat init failed'
+            self.is_login = False            
             return
         self.status_notify()
         if self.get_contact():
             print '[INFO] Get %d contacts' % len(self.contact_list)
             print '[INFO] Start to process messages .'
         self.proc_msg()
+        self.is_login = False
 
     def get_uuid(self):
         url = 'https://login.weixin.qq.com/jslogin'
@@ -1252,7 +1261,7 @@ class WXBot:
         tip = 1
 
         try_later_secs = 1
-        MAX_RETRY_TIMES = 10
+        MAX_RETRY_TIMES = 1
 
         code = UNKONWN
 

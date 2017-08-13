@@ -113,7 +113,7 @@ class Dingdang(object):
             except Exception:
                 logger.error("wxbot Error occured!", exc_info=True)
 
-            logger.error("wxbot run finished!")
+            logger.info("wxbot run finished!")
             runTimes += 1
 
     def run(self):
