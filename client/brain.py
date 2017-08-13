@@ -93,7 +93,7 @@ class Brain(object):
         """
         text = texts[0].decode("utf8")
         nlp_res = self.nlp.lexer(text)
-
+        self._logger.info("start process query'%s'" %text)
         if thirdparty_call:
             # check whether plugin is not allow to be call by thirdparty
             for plugin in self.exclude_plugins:
@@ -115,7 +115,7 @@ class Brain(object):
             # for text in texts:
             if hasattr(plugin, "isValid"): 
                 if plugin.isValid(text) and self.isEnabled(plugin):
-                    self._logger.debug("'%s' is a valid phrase for plugin " +
+                    self._logger.info("'%s' is a valid phrase for plugin " +
                                        "'%s'", text, plugin.__name__)
                     try:
                         self.handling = True
@@ -127,14 +127,14 @@ class Brain(object):
                         reply = u"抱歉，我的大脑出故障了，晚点再试试吧"
                         self.mic.say(reply)
                     else:
-                        self._logger.debug("Handling of phrase '%s' by " +
+                        self._logger.info("Handling of phrase '%s' by " +
                                            "plugin '%s' completed", text,
                                            plugin.__name__)
                     finally:
                         return
             else:
                 if plugin.isNlpValid(nlp_res) and self.isEnabled(plugin):
-                    self._logger.debug("'%s' is a valid phrase for plugin " +
+                    self._logger.info("'%s' is a valid phrase for plugin " +
                                        "'%s'", text, plugin.__name__)
                     try:
                         self.handling = True
@@ -146,11 +146,11 @@ class Brain(object):
                         reply = u"抱歉，我的大脑出故障了，晚点再试试吧"
                         self.mic.say(reply)
                     else:
-                        self._logger.debug("Handling of phrase '%s' by " +
+                        self._logger.info("Handling of phrase '%s' by " +
                                            "plugin '%s' completed", text,
                                            plugin.__name__)
                     finally:
                         return
 
-        self._logger.debug("No plugin was able to handle any of these " +
+        self._logger.info("No plugin was able to handle any of these " +
                            "phrases: %s", texts)
