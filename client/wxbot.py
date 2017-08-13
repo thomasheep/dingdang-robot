@@ -1189,7 +1189,7 @@ class WXBot:
             self.gen_qr_code(self.qr_file)
             print '[INFO] Please use WeChat to scan the QR code .'
         
-        config.set_uni_ojb('wxbot', self)
+        config.set_uni_obj('wxbot', self)
 
         result = self.wait4login()
         print '[INFO] login status return and remove QR code .'        

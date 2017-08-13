@@ -13,6 +13,7 @@ import mute_alsa
 import time
 from app_utils import wechatUser
 import threading
+from client import config
 
 
 class Mic:
