@@ -4,7 +4,9 @@ import os
 import sys
 from client import config
 import time
+import re
 
+PRIORITY = 10
 
 WORDS = ["微信", "二维码"]
 SLUG = "sendqr"
@@ -46,11 +48,13 @@ def handle(text, mic, profile, wxbot=None):
             continue
         with wxbot.qr_lock:
             if os.path.exists(wxbot.qr_file):
-                mic.say(u'正在发送微信登录二维码到您的邮箱')
+                t=mic.asyncSay(u'正在发送微信登录二维码到您的邮箱')
                 if emailUser(profile, u"这是您的微信登录二维码", "", [wxbot.qr_file]):
+                    t.join()
                     mic.say(u'发送成功')
                     return
                 else:
+                    t.join()
                     mic.say(u'发送失败')
                     return
                     

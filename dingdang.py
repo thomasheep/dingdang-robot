@@ -9,6 +9,7 @@ import random
 import yaml
 import argparse
 import threading
+import subprocess
 from client import config
 from client import tts
 from client import stt
@@ -159,6 +160,8 @@ if __name__ == "__main__":
     print("*                                                     *")
     print("*                                                     *")
     print("*******************************************************")
+
+    subprocess.Popen("ps -ef | grep play | grep -v grep | awk '{print $2}' | xargs kill -9", shell=True)
 
     logging.basicConfig(format='[%(asctime)s][%(levelname)s][%(name)s]:%(message)s')
     logger = logging.getLogger()
