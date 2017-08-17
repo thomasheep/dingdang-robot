@@ -4,8 +4,10 @@ import atexit
 from plugins import Email
 from apscheduler.schedulers.background import BackgroundScheduler
 import logging
-
-
+import db
+import config
+from app_utils import wechatUser
+import tushare as ts
 class Notifier(object):
 
     class NotificationClient(object):
@@ -39,6 +41,39 @@ class Notifier(object):
 
     def gather(self):
         [client.run() for client in self.notifiers]
+        self.get_stock_notify()
+
+    def get_stock_notify(self):
+        wxbot = config.get_uni_obj("wxbot")
+        if not wxbot:
+            return
+        watch_list = db.get_instance().get_notify_list()
+        c_list = watch_list['codelist']
+        self._logger.info("watch:%s",str(c_list).decode('string_escape'))
+        if c_list:
+            m_list = watch_list['lastmodifylist']
+            msg_list = []
+            df = ts.get_realtime_quotes(c_list)
+            sendFlag = False
+            for index, row in df.iterrows():
+                
+                modi_time = row['date']+' '+row['time']
+                if index==0:
+                    msg_list.append(' '+str(index +1)+": ")
+                else:
+                    msg_list.append(str(index +1)+": ")
+                msg_list.append(row['code'])                    
+                msg_list.append(row['name'])
+                msg_list.append(row['price'])
+                msg_list.append(row['time'])
+                msg_list.append('\n')
+                if modi_time != m_list[index]:
+                    sendFlag = True
+                    db.get_instance().update_notify(row['code'], modi_time)
+            if sendFlag:
+                msg = ' '.join(msg_list)
+                wechatUser(config.profile, wxbot, '股价关注', msg)
+
 
     def handleEmailNotifications(self, lastDate):
         """Places new email notifications in the Notifier's queue."""

@@ -93,7 +93,7 @@ class Brain(object):
         """
         text = texts[0].decode("utf8")
         nlp_res = self.nlp.lexer(text)
-        self._logger.info("start process query'%s'" %text)
+        self._logger.info("start process query'%s', nlp_res:%s" %(text, nlp_res.has_key('text')))
         if thirdparty_call:
             # check whether plugin is not allow to be call by thirdparty
             for plugin in self.exclude_plugins:
@@ -133,7 +133,7 @@ class Brain(object):
                     finally:
                         return
             else:
-                if plugin.isNlpValid(nlp_res) and self.isEnabled(plugin):
+                if nlp_res['text'] and plugin.isNlpValid(nlp_res) and self.isEnabled(plugin):
                     self._logger.info("'%s' is a valid phrase for plugin " +
                                        "'%s'", text, plugin.__name__)
                     try:

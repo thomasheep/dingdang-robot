@@ -19,6 +19,9 @@ from client.wxbot import WXBot
 from client.conversation import Conversation
 from client.tts import SimpleMp3Player
 import threading
+from client import db 
+
+
 # Add dingdangpath.LIB_PATH to sys.path
 sys.path.append(dingdangpath.LIB_PATH)
 
@@ -145,11 +148,17 @@ class Dingdang(object):
             master = self.config["master_name"]
 
         salutation = random.choice(["%s,%s 竭诚为您服务?" % (master, persona), "%s，请尽情吩咐 %s" % (master, persona)])
+        
 
         self.conversation = Conversation(persona, self.mic, self.config)
-        # self.start_wxbot()
-
+        self.start_wxbot()
         self.mic.say(salutation)
+        if(db.get_instance().is_need_update()):
+            t = self.mic.asyncSay("正在更新股票基本信息数据库")
+            db.get_instance().updata_stock_basics()
+            t.join()
+            mic.say("更新完成")
+        
         self.conversation.handleForever()
 
 

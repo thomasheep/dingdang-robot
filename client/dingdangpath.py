@@ -9,7 +9,6 @@ DATA_PATH = os.path.join(APP_PATH, "static")
 LIB_PATH = os.path.join(APP_PATH, "client")
 TEMP_PATH = os.path.join(APP_PATH, "temp")
 PLUGIN_PATH = os.path.join(LIB_PATH, "plugins")
-DB_PATH = os.path.join(LIB_PATH, "static")
 
 CONFIG_PATH = os.path.expanduser(
     os.getenv('DINGDANG_CONFIG', '~/.dingdang')

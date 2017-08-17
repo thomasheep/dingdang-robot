@@ -333,6 +333,11 @@ class Mic:
     def say(self, phrase,
             OPTIONS=" -vdefault+m3 -p 40 -s 160 --stdout > say.wav"):
             
+        wxbot = config.get_uni_obj('wxbot')
+        if wxbot is not None and wxbot.is_login:
+            wechatUser(self.profile, wxbot, "%s: %s" %
+                      (self.robot_name, phrase), "")  
+                        
         t1 = time.time()
         t2 = t1
         t3 = t2
@@ -341,10 +346,7 @@ class Mic:
             self.speaker.say(phrase)
             t3 = time.time()
 
-        wxbot = config.get_uni_obj('wxbot')
-        if wxbot is not None and wxbot.is_login:
-            wechatUser(self.profile, wxbot, "%s: %s" %
-                      (self.robot_name, phrase), "")
+       
         self._logger.info("Mic say(%s) LockTime:%fs, SpeakTime:%fs",phrase, t2-t1, t3-t2)
 
     def asyncSay(self, phrase):
