@@ -54,4 +54,4 @@ def isValid(text):
         Arguments:
         text -- user-input, typically transcribed speech
     """
-    return all(word in text for word in [u"古诗", u"首"]) and any(word in text for word in [u"作", u"做", u"生成"])
+    return all(word in text for word in [u"诗", u"首"]) and any(word in text for word in [u"作", u"做", u"生成"])
