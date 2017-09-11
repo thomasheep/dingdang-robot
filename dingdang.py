@@ -73,6 +73,7 @@ class WechatBot(WXBot):
             elif msg['content']['type'] == 4:  # echo voice
                 player = SimpleMp3Player()
                 player.play_mp3(os.path.join(dingdangpath.TEMP_PATH, 'voice_%s.mp3' % msg['msg_id']))
+                #player.play_mp3('./temp/voice_%s.mp3' % msg['msg_id'])
 
 
 class Dingdang(object):
@@ -123,7 +124,7 @@ class Dingdang(object):
                 wb.is_alive = False
             wxBot = WechatBot(self.conversation.brain)
             config.set_uni_obj('wxbot', wxBot)                        
-            wxBot.DEBUG = False
+            wxBot.DEBUG = True
             wxBot.conf['qr'] = 'tty'
             t = threading.Thread(target=self.wxbot_run, args=(wxBot,))
             t.setDaemon(True)
@@ -157,7 +158,7 @@ class Dingdang(object):
             t = self.mic.asyncSay("正在更新股票基本信息数据库")
             db.get_instance().updata_stock_basics()
             t.join()
-            mic.say("更新完成")
+            self.mic.say("更新完成")
         
         self.conversation.handleForever()
 
