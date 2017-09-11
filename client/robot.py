@@ -11,6 +11,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+from app_utils import wechatUser
 
 class AbstractRobot(object):
 
@@ -68,35 +69,36 @@ class TulingRobot(AbstractRobot):
             body = {'key': self.tuling_key, 'info': msg, 'userid': userid}
             r = requests.post(url, data=body)
             respond = json.loads(r.text)
+            notSay = False
             result = ''
             if respond['code'] == 100000:
                 result = respond['text'].replace('<br>', '  ')
                 result = result.replace(u'\xa0', u' ')
             elif respond['code'] == 200000:
                 result = respond['url']
+                notSay = True
             elif respond['code'] == 302000:
                 for k in respond['list']:
                     result = result + u"【" + k['source'] + u"】 " +\
                              k['article'] + "\t" + k['detailurl'] + "\n"
+                notSay = True
             else:
                 result = respond['text'].replace('<br>', '  ')
                 result = result.replace(u'\xa0', u' ')
+                notSay = True
             max_length = 200
             if 'max_length' in self.profile:
                 max_length = self.profile['max_length']
-            if len(result) > max_length and \
+            if notSay or (len(result) > max_length and \
                self.profile['read_long_content'] is not None and \
-               not self.profile['read_long_content']:
-                target = '邮件'
+               not self.profile['read_long_content']):
                 wxbot = config.get_uni_obj('wxbot')
-                if wxbot is not None and wxbot.my_account != {} \
-                   and not self.profile['prefers_email']:
-                    target = '微信'
-                self.mic.say(u'一言难尽啊，我给您发%s吧' % target)
-                if sendToUser(self.profile, wxbot, u'回答%s' % msg, result):
-                    self.mic.say(u'%s发送成功！' % target)
+                if wxbot is not None:
+                     t =self.mic.asyncSay(u'结果将发送到您的微信')
+                     wechatUser(self.profile, wxbot, "" , result)
+                     t.join()
                 else:
-                    self.mic.say(u'抱歉，%s发送失败了！' % target)
+                    self.mic.say(u'请扫码登录微信，结果将发送到您的微信')
             else:
                 self.mic.say(result)
         except Exception:

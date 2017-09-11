@@ -40,7 +40,7 @@ def handle(text, mic, profile, wxbot=None):
                    number)
         wxBot -- wechat robot
     """
-    t = mic.asyncSay(random.choice(["请让我思考片刻。","请给我七步的时间。"]))
+    t = mic.asyncSay(random.choice(["请给我三步的时间","请给我七步的时间。"]))
     subprocess.Popen(pargs) 
     p = getPoetry()
     t.join()

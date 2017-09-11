@@ -15,7 +15,6 @@ from app_utils import wechatUser
 import threading
 from client import config
 
-
 class Mic:
     speechRec = None
     speechRec_persona = None
@@ -277,7 +276,7 @@ class Mic:
         if THRESHOLD is None:
             THRESHOLD = self.fetchThreshold()
 
-        self.speaker.play(dingdangpath.data('audio', 'beep_hi.wav'))
+       
 
         # prepare recording stream
         stream = self._audio.open(format=pyaudio.paInt16,
@@ -286,10 +285,12 @@ class Mic:
                                   input=True,
                                   frames_per_buffer=CHUNK)
 
+        self.speaker.play(dingdangpath.data('audio', 'beep_hi.wav'))
+
         frames = []
         # increasing the range # results in longer pause after command
         # generation
-        lastN = [THRESHOLD * 1.2 for i in range(30)]
+        lastN = [THRESHOLD * 1.2 for i in range(45)]
 
         for i in range(0, RATE / CHUNK * LISTEN_TIME):
             try:
@@ -303,7 +304,7 @@ class Mic:
                 average = sum(lastN) / float(len(lastN))
 
                 # TODO: 0.8 should not be a MAGIC NUMBER!
-                if average < THRESHOLD * 0.9:
+                if average < THRESHOLD * 0.8:
                     break
             except Exception, e:
                 self._logger.warning(e)

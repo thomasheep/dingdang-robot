@@ -72,7 +72,7 @@ class WechatBot(WXBot):
                 self.brain.query([msg_data], self, True)
             elif msg['content']['type'] == 4:  # echo voice
                 player = SimpleMp3Player()
-                player.play_mp3('./temp/voice_%s.mp3' % msg['msg_id'])
+                player.play_mp3(os.path.join(dingdangpath.TEMP_PATH, 'voice_%s.mp3' % msg['msg_id']))
 
 
 class Dingdang(object):
@@ -123,7 +123,7 @@ class Dingdang(object):
                 wb.is_alive = False
             wxBot = WechatBot(self.conversation.brain)
             config.set_uni_obj('wxbot', wxBot)                        
-            wxBot.DEBUG = True
+            wxBot.DEBUG = False
             wxBot.conf['qr'] = 'tty'
             t = threading.Thread(target=self.wxbot_run, args=(wxBot,))
             t.setDaemon(True)
@@ -147,7 +147,7 @@ class Dingdang(object):
         if 'master_name' in self.config:
             master = self.config["master_name"]
 
-        salutation = random.choice(["%s,%s 竭诚为您服务?" % (master, persona), "%s，请尽情吩咐 %s" % (master, persona)])
+        salutation = random.choice(["%s,%s 竭诚为您服务!" % (master, persona), "%s，%s能为你做什么？" % (master, persona)])
         
 
         self.conversation = Conversation(persona, self.mic, self.config)
